@@ -1,33 +1,130 @@
-HELP.md
+# ============================================
+# CONFIGURATION FILES (SENSITIVE DATA)
+# ============================================
+
+# Ignore application configuration files with secrets
+**/application.yml
+**/application.yaml
+**/application-*.yml
+**/application-*.yaml
+**/application.properties
+**/application-*.properties
+
+# BUT keep template versions
+!**/application-template.yml
+!**/application-template.yaml
+!**/application-template.properties
+
+# Ignore environment variable files
+.env
+.env.*
+*.env
+
+# Ignore secret files
+secrets.yml
+secrets.yaml
+*.secret
+
+# ============================================
+# BUILD AND DEPENDENCY FILES
+# ============================================
+
+# Compiled files
 target/
+*.class
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Gradle
+.gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
 
-### VS Code ###
+# ============================================
+# IDE FILES
+# ============================================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+*.launch
+
+# VS Code
 .vscode/
+*.code-workspace
+
+# ============================================
+# TEMPORARY AND OS FILES
+# ============================================
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.swo
+*~
+
+# Database files
+*.db
+*.h2.db
+*.mv.db
+
+# ============================================
+# DEPLOYMENT FILES
+# ============================================
+
+# Docker
+*.pid
+*.pid.lock
+docker-compose.override.yml
+
+# Kubernetes
+*.secret.yaml
+
+# ============================================
+# TEST FILES
+# ============================================
+
+# Test reports
+test-output/
+surefire-reports/
+failsafe-reports/
+
+# ============================================
+# MISC
+# ============================================
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Generated files
+*.generated
+*.swagger-gen

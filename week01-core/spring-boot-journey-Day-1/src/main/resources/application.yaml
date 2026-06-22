@@ -1,3 +1,19 @@
+# Server configuration
+server:
+  port: 8080
+
+# Logging configuration
+logging:
+  level:
+    org:
+      springframework: INFO
+    com:
+      yourname: DEBUG
+
+# JPA configuration (not using DB yet, but good to have)
 spring:
-  application:
-    name: spring-boot-journey-Day-1
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false

@@ -1,10 +1,10 @@
-# Day 3: Beans & Bean Annotations
+# Day 2: IOC Container & Dependency Injection
 
 [![Status](https://img.shields.io/badge/Status-Completed-brightgreen.svg)]()
-[![Day](https://img.shields.io/badge/Day-3-blue.svg)]()
-[![Topic](https://img.shields.io/badge/Topic-Beans%20%26%20Annotations-orange.svg)]()
+[![Day](https://img.shields.io/badge/Day-2-blue.svg)]()
+[![Topic](https://img.shields.io/badge/Topic-IOC%20%26%20DI-orange.svg)]()
 
-> **"Beans are the heart of Spring. Understanding them is understanding Spring itself."**
+> **"Stop creating dependencies. Start receiving them."**
 
 ---
 
@@ -14,13 +14,12 @@
 - [Learning Objectives](#-learning-objectives)
 - [What I Learned Today](#-what-i-learned-today)
 - [Key Concepts](#-key-concepts)
-- [What is a Bean?](#-what-is-a-bean)
-- [The Four Stereotype Annotations](#-the-four-stereotype-annotations)
-- [@Component vs @Service vs @Repository vs @Controller](#-component-vs-service-vs-repository-vs-controller)
-- [@Configuration and @Bean](#-configuration-and-bean)
-- [@Bean vs @Component](#-bean-vs-component)
-- [Bean Scopes](#-bean-scopes)
-- [Bean Lifecycle](#-bean-lifecycle)
+- [The Problem: Tight Coupling](#-the-problem-tight-coupling)
+- [The Solution: Dependency Injection](#-the-solution-dependency-injection)
+- [Three Types of DI](#-three-types-of-dependency-injection)
+- [Code Examples](#-code-examples)
+- [Manual vs Spring DI](#-manual-vs-spring-di-comparison)
+- [Deliberately Breaking It](#-deliberately-breaking-it-learning-experience)
 - [Common Mistakes](#-common-mistakes)
 - [Resources](#-resources)
 - [Checklist](#-checklist)
@@ -29,26 +28,27 @@
 
 ## 📖 Overview
 
-Today we dive deep into **Spring Beans**—the objects that form the backbone of your application. Understanding beans is crucial because everything in Spring revolves around them. We'll learn about bean annotations, configuration, and how to control bean creation and lifecycle.
+Today marks the most important day of your Spring Boot journey. Understanding **Inversion of Control (IOC)** and **Dependency Injection (DI)** is the key to mastering Spring. Without these concepts, you're just memorizing annotations.
 
 ### 🎯 The Big Picture
 
-**Before Today:** You knew Spring creates objects, but not how or why.
-**After Today:** You understand beans, their lifecycle, and how to configure them properly.
+**Before Today:** You created objects with `new` everywhere.
+**After Today:** You declare what you need, and Spring provides it.
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 3, you should be able to:
+By the end of Day 2, you should be able to:
 
-- ✅ Define what a **Spring Bean** is
-- ✅ Use the **four stereotype annotations**: `@Component`, `@Service`, `@Repository`, `@Controller`
-- ✅ Distinguish between **@Component** and **@Bean**
-- ✅ Create **@Configuration** classes with **@Bean** methods
-- ✅ Understand **bean scopes** (Singleton, Prototype, Request, Session)
-- ✅ Control bean lifecycle with `@PostConstruct` and `@PreDestroy`
-- ✅ Understand **when and where** to use `@Bean` with `@Configuration`
+- ✅ Explain what **tight coupling** is and why it's bad
+- ✅ Define **Inversion of Control (IOC)** in simple terms
+- ✅ Implement **Dependency Injection (DI)** correctly
+- ✅ Use **constructor injection** (best practice)
+- ✅ Distinguish between **constructor**, **setter**, and **field** injection
+- ✅ Use `@Service` and `@Qualifier` annotations
+- ✅ Recognize the difference between manual and Spring-managed dependencies
+- ✅ Identify common DI errors from their exception messages
 
 ---
 
@@ -56,47 +56,51 @@ By the end of Day 3, you should be able to:
 
 ### From the Exercise
 
-1. **What is a Bean?**
-   - A bean is a Java object **managed by Spring** instead of me using `new`
-   - Spring handles creation, injection, and destruction
+1. **Manual vs Spring DI**
+   - **Manual:** Creating objects with `new` and wiring them yourself is painful and inflexible
+   - **Spring:** Letting the container manage everything is cleaner and more maintainable
 
-2. **The Four Stereotype Annotations**
-   - `@Component` - Generic Spring bean
-   - `@Service` - Business logic layer
-   - `@Repository` - Data access layer  
-   - `@Controller` - Web layer
-   - All do the same thing (create a bean) but communicate intent
+2. **The Power of `@Qualifier`**
+   - When multiple beans of the same type exist, Spring needs help choosing
+   - `@Qualifier("beanName")` tells Spring exactly which one to inject
+   - Without it, you get: `Parameter 0 required a single bean, but 2 were found`
 
-3. **@Component vs @Bean**
-   - `@Component` → For MY classes (I own the code)
-   - `@Bean` → For THIRD-PARTY classes (I don't own the code)
-   - `@Bean` requires `@Configuration` class
+3. **Error Messages Are Your Friends**
+   - `No qualifying bean available` → Missing `@Service` or wrong package
+   - `2 beans found, expected 1` → Missing `@Qualifier`
+   - Deliberately breaking code helps you recognize errors forever
 
-4. **Bean Scopes**
-   - **Singleton** (default) → One instance for entire app
-   - **Prototype** → New instance every time
-   - Singleton is safe for stateless services
-   - Prototype is needed for stateful objects
-
-5. **Bean Lifecycle**
-   - `@PostConstruct` → Runs after dependencies are injected (initialization)
-   - `@PreDestroy` → Runs before bean is destroyed (cleanup)
+4. **Constructor Injection is Non-Negotiable**
+   - Makes dependencies `final` (immutable)
+   - Makes testing trivial (just pass mocks)
+   - No `@Autowired` needed for single constructor
 
 ### Key Insights
 
 | Concept | My Understanding |
 |---------|------------------|
-| **Bean** | Java object managed by Spring |
-| **@Component** | Tells Spring: "Make this class a bean" |
-| **@Service** | Specialized @Component for business logic |
-| **@Repository** | Specialized @Component for data access |
-| **@Configuration** | Tells Spring: "This class has bean definitions" |
-| **@Bean** | Tells Spring: "Call this method to create a bean" |
-| **Singleton** | Default scope - one instance per container |
-| **Prototype** | New instance every time |
-| **@PostConstruct** | Runs after dependencies are injected |
-| **@PreDestroy** | Runs before bean is destroyed |
+| **Tight Coupling** | When a class creates its own dependencies with `new` → Hard to change/test |
+| **Loose Coupling** | When dependencies are injected → Easy to swap/test |
+| **IOC** | Spring Container controls object creation, not your code |
+| **DI** | The mechanism Spring uses to inject dependencies |
+| **Constructor Injection** | Best practice → Immutable, testable, clear |
+| **Field Injection** | Anti-pattern → Hard to test, not immutable |
 
 ---
 
+## 🔑 Key Concepts
 
+### 1. Tight Coupling (The Problem)
+
+```java
+// ❌ TIGHT COUPLING - The Problem
+public class OrderService {
+    // OrderService CREATES its own dependencies
+    private EmailService emailService = new EmailService();
+    private SmsService smsService = new SmsService();
+    
+    public void placeOrder(Order order) {
+        emailService.sendConfirmation(order);
+        smsService.sendConfirmation(order);
+    }
+}

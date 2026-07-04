@@ -1,4 +1,3 @@
-```
 # Week 2, Day 1: REST Fundamentals & First Controller
 
 [![Status](https://img.shields.io/badge/Status-Completed-brightgreen.svg)]()

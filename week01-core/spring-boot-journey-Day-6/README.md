@@ -1,4 +1,3 @@
-```
 # Day 6: Spring Boot Auto-Configuration
 
 > **"Spring Boot magically configures things—but you can override anything."**

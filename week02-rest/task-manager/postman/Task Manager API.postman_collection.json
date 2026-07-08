@@ -1,0 +1,580 @@
+{
+  "info": {
+    "_postman_id": "d5a88bb2-02a3-4b8e-8f68-2f508dc97d48",
+    "name": "Task Manager API",
+    "description": "Week 2 Day 7 - In-Memory Task Manager API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-d5a88bb2-02a3-4b8e-8f68-2f508dc97d48?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "{{baseUrl}}/api/tasks",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check all tasks have TODO status",
+                  "pm.test(\"All tasks have status TODO\", function() {",
+                  "    const tasks = pm.response.json();",
+                  "    tasks.forEach(function(task) {",
+                  "        pm.expect(task.status).to.equal(\"TODO\");",
+                  "    });",
+                  "});",
+                  "",
+                  "// 3. Check array",
+                  "pm.test(\"Response is an array\", function() {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?status=TODO",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "TODO"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check all tasks have HIGH priority",
+                  "pm.test(\"All tasks have priority HIGH\", function() {",
+                  "    const tasks = pm.response.json();",
+                  "    tasks.forEach(function(task) {",
+                  "        pm.expect(task.priority).to.equal(\"HIGH\");",
+                  "    });",
+                  "});",
+                  "",
+                  "// 3. Check array",
+                  "pm.test(\"Response is an array\", function() {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?priority=HIGH",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "HIGH"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/overdue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check array",
+                  "pm.test(\"Response is an array\", function() {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// 3. Check all tasks are overdue",
+                  "pm.test(\"All tasks have due date before today\", function() {",
+                  "    const tasks = pm.response.json();",
+                  "    const today = new Date();",
+                  "    tasks.forEach(function(task) {",
+                  "        const dueDate = new Date(task.dueDate);",
+                  "        pm.expect(dueDate).to.be.below(today);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/overdue",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "overdue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 201 Created\", function() {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// 2. Location header check",
+                  "pm.test(\"Location header present\", function() {",
+                  "    pm.response.to.have.header(\"Location\");",
+                  "});",
+                  "",
+                  "// 3. Response has ID",
+                  "pm.test(\"Created task has ID\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task).to.have.property(\"id\");",
+                  "    pm.expect(task.id).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "// 4. SAVE taskId for chaining",
+                  "pm.test(\"Save taskId for chaining\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.environment.set(\"taskId\", task.id);",
+                  "});",
+                  "",
+                  "// 5. Check default status is TODO",
+                  "pm.test(\"Default status is TODO\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.status).to.equal(\"TODO\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Learn Spring Boot\",\n    \"description\": \"Complete Week 2 of Spring Boot journey\",\n    \"priority\": \"HIGH\",\n    \"dueDate\": \"2026-08-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check task has correct ID",
+                  "pm.test(\"Task has correct ID\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.id).to.equal(Number(pm.environment.get(\"taskId\")));",
+                  "});",
+                  "",
+                  "// 3. Check required fields",
+                  "pm.test(\"Task has id, title, status\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task).to.have.property(\"id\");",
+                  "    pm.expect(task).to.have.property(\"title\");",
+                  "    pm.expect(task).to.have.property(\"status\");",
+                  "    pm.expect(task).to.have.property(\"priority\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check updated fields",
+                  "pm.test(\"Task updated correctly\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.title).to.equal(\"Master Spring Boot\");",
+                  "    pm.expect(task.priority).to.equal(\"CRITICAL\");",
+                  "});",
+                  "",
+                  "// 3. Check ID unchanged",
+                  "pm.test(\"ID unchanged\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.id).to.equal(Number(pm.environment.get(\"taskId\")));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Master Spring Boot\",\n    \"description\": \"Complete all 8 weeks of Spring Boot journey\",\n    \"priority\": \"CRITICAL\",\n    \"dueDate\": \"2026-09-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 200 OK\", function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Check status updated",
+                  "pm.test(\"Status updated to IN_PROGRESS\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.status).to.equal(\"IN_PROGRESS\");",
+                  "});",
+                  "",
+                  "// 3. Check ID unchanged",
+                  "pm.test(\"ID unchanged\", function() {",
+                  "    const task = pm.response.json();",
+                  "    pm.expect(task.id).to.equal(Number(pm.environment.get(\"taskId\")));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"IN_PROGRESS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Expect error",
+                  "pm.test(\"Status is 400 or 500 (invalid transition)\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+                  "});",
+                  "",
+                  "// 2. Check error message",
+                  "pm.test(\"Error message contains 'Invalid status transition'\", function() {",
+                  "    pm.expect(pm.response.text()).to.include(\"Invalid status transition\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"DONE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 204 No Content\", function() {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "// 2. Response body empty",
+                  "pm.test(\"Response body is empty\", function() {",
+                  "    pm.expect(pm.response.text()).to.be.empty;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/tasks/{{taskId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check",
+                  "pm.test(\"Status 404 Not Found\", function() {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                "{{taskId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

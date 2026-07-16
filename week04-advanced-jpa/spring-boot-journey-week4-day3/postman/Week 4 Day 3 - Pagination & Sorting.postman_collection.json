@@ -1,0 +1,347 @@
+{
+  "info": {
+    "_postman_id": "96f3c364-b3f4-446a-a3fc-df4bf0100a10",
+    "name": "Week 4 Day 3 - Pagination & Sorting",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-96f3c364-b3f4-446a-a3fc-df4bf0100a10?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Basic Pagination",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=1&size=2",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=999&size=10\n",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "999"
+                },
+                {
+                  "key": "size",
+                  "value": "10\n"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=2",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Sorting",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=10&sort=title,asc",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "title,asc"
+                }
+              ]
+            },
+            "description": "First page, 10 items, sorted by title ascending"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=10&sort=price,desc",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "price,desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=10&sort=genre,asc&sort=title,asc",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "genre,asc"
+                },
+                {
+                  "key": "sort",
+                  "value": "title,asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Filtered Pagination",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/available",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/available?page=0&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "available"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/search",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/search?keyword=clean&page=0&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "clean"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/genre/Software%20Engineering",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/genre/Software%20Engineering?page=0&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "genre",
+                "Software%20Engineering"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Single Item",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

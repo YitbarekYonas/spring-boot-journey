@@ -1,0 +1,125 @@
+{
+  "info": {
+    "_postman_id": "ded5f34b-2b13-4554-b76c-d289cc69e557",
+    "name": "Week 4 Day 6 - Auditing & Query Optimization",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-ded5f34b-2b13-4554-b76c-d289cc69e557?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Auditing Tests",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Effective Java\",\n    \"isbn\": \"978-0134685991\",\n    \"author\": {\n        \"id\": 1\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Clean Code - 2nd Edition\",\n    \"isbn\": \"978-0132350884\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Query Optimization",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/n-plus-one",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/n-plus-one",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "n-plus-one"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Compare SQL Logs",
+      "item": []
+    }
+  ]
+}

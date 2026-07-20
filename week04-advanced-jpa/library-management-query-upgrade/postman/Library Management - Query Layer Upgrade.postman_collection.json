@@ -1,0 +1,878 @@
+{
+  "info": {
+    "_postman_id": "85e1bc5e-7070-4c2d-9d62-e7230a20cae4",
+    "name": "Library Management - Query Layer Upgrade",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-85e1bc5e-7070-4c2d-9d62-e7230a20cae4?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Books - Paginated Endpoints",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=5&sort=title,asc",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                },
+                {
+                  "key": "sort",
+                  "value": "title,asc"
+                }
+              ]
+            },
+            "description": "First page, 5 items, sorted by title ascending"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=1&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Second page (should be empty if less than 5 books)"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=10&sort=price,desc",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "price,desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=0&size=10&sort=genre,asc&sort=title,asc\n",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "genre,asc"
+                },
+                {
+                  "key": "sort",
+                  "value": "title,asc\n"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?page=999&size=10",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "999"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/999",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/999",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Books - Filtered & Search",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/search",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/search?keyword=clean&page=0&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "clean"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Full-text search across title, author first name, author last name"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/genre/Software%20Engineering",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/genre/Software%20Engineering?page=0&size=5",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "genre",
+                "Software%20Engineering"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Paginated books by genre"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/available",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/available",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "available"
+              ]
+            },
+            "description": "Returns DTO with only 9 fields (no lazy loading)\n\n"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auditing fields are set\", function() {",
+                  "    const book = pm.response.json();",
+                  "    pm.expect(book.createdAt).to.not.be.null;",
+                  "    pm.expect(book.updatedAt).to.not.be.null;",
+                  "    pm.expect(book.createdBy).to.equal(\"system\");",
+                  "    pm.expect(book.lastModifiedBy).to.equal(\"system\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Effective Java\",\n    \"isbn\": \"978-0134685991\",\n    \"publishDate\": \"2017-12-27\",\n    \"price\": 45.99,\n    \"totalCopies\": 5,\n    \"genre\": \"Programming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?authorId=1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "authorId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Updated audit fields changed\", function() {",
+                  "    const book = pm.response.json();",
+                  "    pm.expect(book.updatedAt).to.not.equal(book.createdAt);",
+                  "    pm.expect(book.lastModifiedBy).to.equal(\"system\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Clean Code - 2nd Edition\",\n    \"price\": 45.99,\n    \"genre\": \"Software Engineering\",\n    \"totalCopies\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Loans - Paginated & Details",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans?status=ACTIVE&page=0&size=10",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ACTIVE"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans?status=RETURNED&page=0&size=10\n",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "RETURNED"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10\n"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/overdue",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/overdue",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "overdue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/member/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/member/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "member",
+                "1"
+              ]
+            },
+            "description": "Returns LoanDetailDto with book, author, member info (no lazy loading)\n\n"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/stats/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/stats/books",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "stats",
+                "books"
+              ]
+            },
+            "description": " Native query with CASE expressions, interface projection\n\n"
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/checkout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Checkout returns loan with ACTIVE status\", function() {",
+                  "    const loan = pm.response.json();",
+                  "    pm.expect(loan.status).to.equal(\"ACTIVE\");",
+                  "    pm.expect(loan.book.id).to.equal(2);",
+                  "    pm.expect(loan.member.id).to.equal(2);",
+                  "    pm.environment.set(\"loanId\", loan.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/checkout?bookId=2&memberId=2",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "checkout"
+              ],
+              "query": [
+                {
+                  "key": "bookId",
+                  "value": "2"
+                },
+                {
+                  "key": "memberId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Atomic Operations",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/checkout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/checkout?bookId=1&memberId=2",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "checkout"
+              ],
+              "query": [
+                {
+                  "key": "bookId",
+                  "value": "1"
+                },
+                {
+                  "key": "memberId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/1/return",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Return updates loan status\", function() {",
+                  "    const loan = pm.response.json();",
+                  "    pm.expect(loan.status).to.equal(\"RETURNED\");",
+                  "    pm.expect(loan.returnDate).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/1/return",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "1",
+                "return"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/loans/checkout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/loans/checkout?bookId=1&memberId=1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "loans",
+                "checkout"
+              ],
+              "query": [
+                {
+                  "key": "bookId",
+                  "value": "1"
+                },
+                {
+                  "key": "memberId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Auditing Verification",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test Audit Book\",\n    \"isbn\": \"978-1234567890\",\n    \"publishDate\": \"2026-01-01\",\n    \"price\": 29.99,\n    \"totalCopies\": 3,\n    \"genre\": \"Test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books?authorId=1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "authorId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/4",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test Audit Book - Updated\",\n    \"price\": 39.99,\n    \"genre\": \"Test\",\n    \"totalCopies\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/4",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

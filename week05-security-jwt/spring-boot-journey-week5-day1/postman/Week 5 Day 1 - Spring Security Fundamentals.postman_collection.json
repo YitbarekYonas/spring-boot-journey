@@ -1,0 +1,168 @@
+{
+  "info": {
+    "_postman_id": "f7012695-9a71-4430-bfdb-c8f84066348a",
+    "name": "Week 5 Day 1 - Spring Security Fundamentals",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-f7012695-9a71-4430-bfdb-c8f84066348a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Public Endpoints (No Auth)",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Protected Endpoints (Auth Required)",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Effective Java\",\n    \"isbn\": \"978-0134685991\",\n    \"genre\": \"Programming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Clean Code - 2nd Edition\",\n    \"isbn\": \"978-0132350884\",\n    \"genre\": \"Software Engineering\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/1",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/books/4",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/books/4",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "books",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Debug",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/debug/filters",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/debug/filters",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "debug",
+                "filters"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

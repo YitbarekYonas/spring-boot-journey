@@ -1,0 +1,25 @@
+package com.JavaBackEnd.jwtauthservice.config;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import java.util.Optional;
+
+@Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+public class AuditConfig {
+
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        return () -> Optional.of("system");
+    }
+
+    // ✅ Explicitly create ObjectMapper bean
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+}

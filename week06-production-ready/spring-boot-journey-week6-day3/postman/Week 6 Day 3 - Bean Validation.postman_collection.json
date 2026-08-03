@@ -1,0 +1,301 @@
+{
+  "info": {
+    "_postman_id": "8c4863e8-5c79-4f10-9f47-e39c9351a5dd",
+    "name": "Week 6 Day 3 - Bean Validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52604830",
+    "_collection_link": "https://go.postman.co/collection/52604830-8c4863e8-5c79-4f10-9f47-e39c9351a5dd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Success Tests (Valid Data)",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"ValidPass123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validation returns 400 with fieldErrors\", function() {",
+                  "    pm.response.to.have.status(400);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.errorCode).to.equal(\"VALIDATION_FAILED\");",
+                  "    pm.expect(body.fieldErrors).to.be.an(\"array\");",
+                  "    pm.expect(body.fieldErrors.length).to.equal(3);",
+                  "    ",
+                  "    // Check specific field errors",
+                  "    const fieldNames = body.fieldErrors.map(fe => fe.field);",
+                  "    pm.expect(fieldNames).to.include(\"name\");",
+                  "    pm.expect(fieldNames).to.include(\"email\");",
+                  "    pm.expect(fieldNames).to.include(\"password\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Validation Error Tests (400 Series)",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid email returns 400\", function() {",
+                  "    pm.response.to.have.status(400);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.fieldErrors[0].field).to.equal(\"email\");",
+                  "    pm.expect(body.fieldErrors[0].message).to.include(\"valid email\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"not-an-email\",\n    \"password\": \"ValidPass123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"short\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"ValidPass123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/change-password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"currentPassword\": \"admin123\",\n    \"newPassword\": \"NewPass456\",\n    \"confirmNewPassword\": \"DifferentPass789\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/change-password",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Multiple Violation Tests",
+      "item": [
+        {
+          "name": "{{baseUrl}}{{apiVersion}}/auth/register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Multiple violations reported together\", function() {",
+                  "    pm.response.to.have.status(400);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.fieldErrors.length).to.equal(3);",
+                  "    ",
+                  "    const messages = body.fieldErrors.map(fe => fe.message);",
+                  "    pm.expect(messages).to.include(\"Name is required\");",
+                  "    pm.expect(messages).to.include(\"Email must be a valid email address\");",
+                  "    pm.expect(messages).to.include(\"Password must be between 8 and 72 characters\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"email\": \"bad\",\n    \"password\": \"ab\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiVersion}}/auth/register",
+              "host": [
+                "{{baseUrl}}{{apiVersion}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

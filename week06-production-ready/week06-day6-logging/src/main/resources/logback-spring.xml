@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    logback-spring.xml — Spring Boot reads this automatically.
+    Use this file (not logback.xml) so Spring's profile support works.
+
+    Concepts shown:
+    1. CONSOLE appender   — pretty, colored output for development
+    2. FILE appender      — rolling daily file for production
+    3. Profile-based      — dev profile uses console, prod adds file
+    4. MDC               — requestId flows from filter into every log line
+-->
+<configuration>
+
+    <!-- ── CONSOLE Appender ─────────────────────────────────────────────── -->
+    <!-- Colored, human-readable output. Great for development. -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--
+                Pattern tokens explained:
+                %d{...}        → timestamp
+                %-5level       → log level padded to 5 chars (INFO , DEBUG, WARN , ERROR)
+                [%thread]      → thread name (main, http-nio-8080-exec-1, etc.)
+                %X{requestId}  → MDC value — request ID injected by RequestLoggingFilter
+                                 Shows as empty string if no request context
+                %logger{36}    → logger class name, max 36 chars (truncated from left)
+                %msg           → the actual log message
+                %n             → newline
+            -->
+            <pattern>
+                %d{HH:mm:ss.SSS} %-5level [%thread] [%X{requestId}] %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- ── FILE Appender ────────────────────────────────────────────────── -->
+    <!-- Rolling daily file — each day gets its own file, old files zipped. -->
+    <!-- Activate this in prod. Not needed for local development. -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/library-app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- logs/library-app-2026-08-07.log.gz -->
+            <fileNamePattern>logs/library-app-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>         <!-- keep 30 days of logs -->
+            <totalSizeCap>1GB</totalSizeCap>    <!-- delete oldest if total exceeds 1GB -->
+        </rollingPolicy>
+        <encoder>
+            <!-- No colors in files — color codes would appear as garbage in text editors -->
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{requestId}] %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- ── Profile: local (development) ────────────────────────────────── -->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <!-- Our code: DEBUG so all log.debug() calls are visible -->
+        <logger name="com.JavaBackEnd" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <!-- Suppress noisy Spring Security debug output -->
+        <logger name="org.springframework.security" level="WARN"/>
+    </springProfile>
+
+    <!-- ── Profile: postgres (production-like) ──────────────────────────── -->
+    <springProfile name="postgres">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>          <!-- also write to file in prod -->
+        </root>
+        <logger name="com.JavaBackEnd" level="INFO" additivity="false">
+            <!-- INFO in prod — don't log DEBUG details in production -->
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+        <logger name="org.springframework.security" level="WARN"/>
+    </springProfile>
+
+</configuration>

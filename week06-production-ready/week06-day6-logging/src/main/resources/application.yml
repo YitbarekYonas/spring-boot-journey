@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: week6-day6-logging
+  profiles:
+    active: local
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:librarydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/librarydb
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
+
+# ── Logging Configuration ─────────────────────────────────────────────────
+# This is the simplest way to control log levels.
+# For more control (file output, rolling, patterns) use logback-spring.xml
+logging:
+  level:
+    # Our application code — DEBUG so we see all log statements we write
+    com.JavaBackEnd: DEBUG
+
+    # Spring Security — WARN to suppress noisy authentication debug logs
+    org.springframework.security: WARN
+
+    # Hibernate SQL — already shown via show-sql: true, suppress duplicate logs
+    org.hibernate.SQL: WARN
+
+    # Spring Web — INFO to see incoming request mappings on startup
+    org.springframework.web: INFO
+
+    # Root logger — everything else gets INFO
+    root: INFO
+
+  # Where logs go — console only for dev; add 'file' for production
+  pattern:
+    # Console pattern: timestamp level [thread] logger - message
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"

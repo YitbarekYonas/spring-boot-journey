@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: week7-day1-junit5
+  # No datasource needed — Day 1 tests are pure Java, no DB
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.JavaBackEnd: DEBUG

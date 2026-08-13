@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: week7-day3-webmvctest
+logging:
+  level:
+    com.JavaBackEnd: DEBUG

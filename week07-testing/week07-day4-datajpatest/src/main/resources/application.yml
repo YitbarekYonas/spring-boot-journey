@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: week7-day4-datajpatest
+
+  # Using H2 as the "main" datasource here on purpose so the whole project
+  # is self-contained and runnable with zero external setup (no Postgres/
+  # MySQL to install just to run tests). Swap this for a real DB driver
+  # when you plug this repository layer into a full app (see Week 3).
+  datasource:
+    url: jdbc:h2:mem:taskdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  h2:
+    console:
+      enabled: true   # visit /h2-console when running the app
+
+logging:
+  level:
+    com.JavaBackEnd: DEBUG

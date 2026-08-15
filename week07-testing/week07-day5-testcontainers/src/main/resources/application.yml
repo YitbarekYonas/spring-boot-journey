@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: week7-day5-testcontainers
+
+  # ── Runtime datasource (used when you actually run the app) ────────────────
+  # Unlike Day 4 (which used H2 for everything), this project targets real
+  # PostgreSQL for the app itself. Externalized via env vars (Week 8 /
+  # General Best Practice #5) — never hardcode credentials.
+  #
+  # The TEST suite does NOT use this block at all — @DynamicPropertySource
+  # in the integration test overrides spring.datasource.* at runtime with
+  # the coordinates of the Testcontainers-managed Postgres container.
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/taskdb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+logging:
+  level:
+    com.JavaBackEnd: DEBUG
+    org.testcontainers: INFO
+    com.github.dockerjava: WARN

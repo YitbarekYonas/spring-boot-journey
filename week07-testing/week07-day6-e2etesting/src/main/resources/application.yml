@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: week7-day6-e2etesting
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/taskdb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+logging:
+  level:
+    com.JavaBackEnd: DEBUG
+    org.testcontainers: INFO
+    com.github.dockerjava: WARN

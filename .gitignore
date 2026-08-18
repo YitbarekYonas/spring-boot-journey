@@ -1,1 +1,9 @@
 .vscode/
+.dockerignore
+.gitignore
+**/application.yml
+**/application.yaml
+**/application-*.yml
+**/application-*.yaml
+**/application.properties
+**/application-*.properties

@@ -1,0 +1,76 @@
+# ══════════════════════════════════════════════════════════════════════════
+# docker-compose.yml — app + database, defined and networked together
+# ══════════════════════════════════════════════════════════════════════════
+# One `docker compose up` starts BOTH services, on a shared internal
+# network, with the app waiting for the database to be genuinely ready
+# (not just "started") before it tries to connect.
+
+services:
+
+  # ── Database service ──────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: task-manager-db
+    restart: unless-stopped
+    environment:
+      # Values come from the .env file (see .env.example) — never hardcoded
+      # here directly. Compose automatically reads a file named `.env` in
+      # this directory and substitutes ${VAR} references below with it.
+      POSTGRES_DB: ${POSTGRES_DB:-taskdb}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      # Exposed to the HOST too (not just the internal network) so you can
+      # connect a local DB client (DBeaver, psql, IntelliJ's DB tool) to
+      # inspect data directly while developing. The app itself, running
+      # inside Compose's network, does NOT use this host-mapped port — it
+      # uses the internal one (see `db:5432` in the app's DB_URL below).
+      - "5432:5432"
+    volumes:
+      # Named volume — this is what makes data survive `docker compose down`
+      # and container restarts. Without this, every container recreation
+      # would start from a completely empty database (Postgres' own image
+      # stores its data files at /var/lib/postgresql/data internally).
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # Compose's `depends_on: condition: service_healthy` (used by the app
+      # service below) polls this. pg_isready checks that Postgres is not
+      # just "the container process started" but "actually accepting
+      # connections" — the gap between those two moments is exactly where
+      # naive setups get flaky "connection refused" errors on first boot.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-taskdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Application service ─────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-manager-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        # Waits for the healthcheck above to report healthy — not just for
+        # the db container to exist. This is the fix for the classic "app
+        # container starts a split second before Postgres is ready to
+        # accept connections and crashes on its first connection attempt."
+        condition: service_healthy
+    environment:
+      # Note the hostname: "db", not "localhost" — Compose gives every
+      # service a DNS entry matching its service name on the shared
+      # internal network it creates automatically. The app reaches the
+      # database container by that name, over the internal Docker network,
+      # never touching the host-mapped port above at all.
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-taskdb}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "8080:8080"
+
+# Declares the named volume used above. Compose manages its lifecycle;
+# `docker compose down -v` removes it explicitly if you ever want a truly
+# clean slate — plain `docker compose down` leaves it (and your data) intact.
+volumes:
+  postgres_data:

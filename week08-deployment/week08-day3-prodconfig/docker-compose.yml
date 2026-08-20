@@ -1,0 +1,55 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: task-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-taskdb}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-taskdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-manager-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # ── Profile activation, from the environment — Day 3's other new
+      # concept alongside Actuator. Switching this one variable moves the
+      # whole app between application-dev.yml and application-prod.yml —
+      # no code change, no rebuild, just a different env var at run time.
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-taskdb}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      # This mirrors the Dockerfile's own HEALTHCHECK instruction — defining
+      # it here too means Compose enforces the same check and exposes the
+      # same "healthy"/"unhealthy" status via `docker compose ps`, and lets
+      # OTHER services in a larger compose file use
+      # `depends_on: app: condition: service_healthy` the same way `app`
+      # itself depends on `db` above.
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 15s
+      retries: 3
+
+volumes:
+  postgres_data:

@@ -1,0 +1,87 @@
+name: CI
+
+# ── When this workflow runs ──────────────────────────────────────────────
+# Every push to main, and every pull request targeting main. This is the
+# minimum that gives real protection: main never merges broken code, and
+# every PR shows its test result right on the PR page before anyone reviews
+# it.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# Cancel a previous in-progress run for the same branch/PR if a new commit
+# lands before it finishes — avoids wasting minutes running CI against code
+# that's already been superseded.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────
+      # The runner starts as a bare VM with nothing on it — this step
+      # actually pulls the repo's code onto it.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Set up JDK ────────────────────────────────────────────────────
+      # `cache: maven` alone gives free caching of ~/.m2 between runs,
+      # keyed off pom.xml — the GitHub Actions equivalent of the Docker
+      # layer-caching trick from Day 1: dependencies download once, not on
+      # every single push.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      # ── 3. Build ─────────────────────────────────────────────────────────
+      # Compiles the app, WITHOUT running tests yet — a separate step keeps
+      # the CI log readable: a compile failure and a test failure look
+      # completely different when they're not interleaved.
+      - name: Build (compile only)
+        run: mvn -B clean compile
+
+      # ── 4. Run tests ─────────────────────────────────────────────────────
+      # This runs ALL FOUR layers from Week 7: Mockito unit tests,
+      # @WebMvcTest, @DataJpaTest (embedded H2, no Docker needed), and the
+      # one Testcontainers-backed integration test. GitHub-hosted
+      # ubuntu-latest runners have Docker pre-installed and running by
+      # default — Testcontainers works here with zero extra setup, unlike
+      # a from-scratch CI environment where you'd need to explicitly
+      # provision a Docker daemon.
+      - name: Run test suite
+        run: mvn -B test
+
+      # ── 5. Publish test results ──────────────────────────────────────────
+      # Surfaces individual test pass/fail counts directly in the GitHub
+      # Actions run summary — not just "the mvn command exited non-zero,"
+      # but which specific tests failed, visible without digging through
+      # raw console logs. Runs even if the previous step failed, so a red
+      # build still shows you exactly what broke.
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maven Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+      # ── 6. Upload the built jar as a workflow artifact ──────────────────
+      # Not deployed anywhere yet (that's Day 5's job — CD), but attaching
+      # the build output to the workflow run means anyone can download
+      # exactly what THIS commit produced, for manual inspection or a
+      # smoke test, straight from the Actions tab.
+      - name: Upload build artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-manager-jar
+          path: target/*.jar
+          retention-days: 7

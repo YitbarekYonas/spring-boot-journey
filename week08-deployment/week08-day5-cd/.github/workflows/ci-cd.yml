@@ -1,0 +1,119 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ══════════════════════════════════════════════════════════════════════
+  # JOB 1 — Continuous Integration (unchanged from Day 4)
+  # ══════════════════════════════════════════════════════════════════════
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      - name: Build (compile only)
+        run: mvn -B clean compile
+
+      - name: Run test suite
+        run: mvn -B test
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maven Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+      - name: Upload build artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-manager-jar
+          path: target/*.jar
+          retention-days: 7
+
+  # ══════════════════════════════════════════════════════════════════════
+  # JOB 2 — Continuous Delivery: build & push a Docker image
+  # ══════════════════════════════════════════════════════════════════════
+  # `needs: build-and-test` means this job doesn't even START until the
+  # first job finishes successfully — a failing test means NO image is
+  # ever built or pushed. This is the entire point of "CD after CI": the
+  # image that reaches the registry is guaranteed to be one that passed
+  # every test in the suite, never an untested guess.
+  #
+  # Only runs on pushes to main (not on PRs) — a PR from a fork shouldn't
+  # be able to push images to your registry, and you don't want a
+  # not-yet-merged branch publishing artifacts that look like real
+  # releases.
+  build-and-push-image:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Log in to the registry ──────────────────────────────────────────
+      # Using GitHub Container Registry (ghcr.io) here rather than Docker
+      # Hub — it needs zero extra secrets to set up (the built-in
+      # GITHUB_TOKEN already has push permission to your own repo's
+      # package registry). The roadmap also mentions Docker Hub as an
+      # option; swapping registries is just a different `registry:` value
+      # and a different secret pair below (see the README).
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Derive tags and labels automatically ────────────────────────────
+      # docker/metadata-action inspects the git context (branch, commit
+      # SHA) and generates a consistent, meaningful set of tags — instead
+      # of hand-writing "latest" every time (which tells you NOTHING about
+      # which commit actually produced this image).
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=,format=short
+
+      # ── Build and push, in one step ─────────────────────────────────────
+      # Reuses the exact same multi-stage Dockerfile from Day 1 — no
+      # separate "CI Dockerfile" vs "prod Dockerfile." The image built here
+      # is byte-for-byte what you'd get running `docker build .` locally.
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Caches Docker layers between workflow runs using GitHub Actions'
+          # own cache — the CI equivalent of Day 1's "COPY pom.xml before
+          # COPY src" trick, but for the whole pipeline instead of just one
+          # local build.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

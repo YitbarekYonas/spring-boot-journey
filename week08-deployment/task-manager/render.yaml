@@ -1,0 +1,68 @@
+# ══════════════════════════════════════════════════════════════════════════
+# render.yaml — Render "Blueprint": infrastructure-as-code for this project
+# ══════════════════════════════════════════════════════════════════════════
+# Committing this file means anyone (including you, on a fresh Render
+# account) can recreate the entire deployment — the web service AND the
+# managed Postgres database — from "New +  → Blueprint" pointed at this
+# repo, instead of manually clicking through Render's dashboard and hoping
+# you remember every setting next time.
+
+databases:
+  - name: task-manager-db
+    databaseName: taskdb
+    plan: free
+    # Render provisions and fully manages this Postgres instance — backups,
+    # patching, the underlying VM — none of that is this project's concern
+    # anymore. This is the actual value of a "managed" database service.
+
+services:
+  - type: web
+    name: task-manager-app
+    runtime: docker
+    # Render builds directly from the repo's Dockerfile — the SAME
+    # Dockerfile from Day 1, unmodified. What ran locally, what CI tested,
+    # and what's deployed here are all built from one shared definition.
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    # This is Render's OWN health check — separate from the Dockerfile's
+    # HEALTHCHECK instruction. Render polls this HTTP path after deploying
+    # a new version and only routes live traffic to it once this reports
+    # healthy — this is what makes a bad deploy fail safely instead of
+    # silently taking down the app for real users.
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # ── A deliberate gotcha, solved here on purpose ─────────────────────
+      # Render's `connectionString` property returns a `postgres://...` URL
+      # — NOT the `jdbc:postgresql://...` format Spring's datasource needs.
+      # Using it directly would fail at startup with a confusing "no
+      # suitable driver" error.
+      #
+      # Render DOES reliably populate individual host/port/database/user/
+      # password properties via `fromDatabase` (below) — but I'm not
+      # confident render.yaml supports ${VAR} interpolation BETWEEN two
+      # env vars declared in this same file, so rather than gamble on
+      # unverified Blueprint syntax, the JDBC URL is assembled inside
+      # Spring's own config instead (see application-prod.yml), which
+      # definitely supports composing one property from others.
+      - key: DB_HOST
+        fromDatabase:
+          name: task-manager-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: task-manager-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: task-manager-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: task-manager-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: task-manager-db
+          property: password
